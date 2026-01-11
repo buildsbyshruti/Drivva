@@ -1,0 +1,65 @@
+<% layout('layouts/boilerplate') %>
+
+<div
+  class="container d-flex justify-content-center align-items-center"
+  style="min-height: 80vh"
+>
+  <div
+    class="card shadow-lg p-4 rounded-4"
+    style="max-width: 450px; width: 100%"
+  >
+    <div class="text-center mb-3">
+      <h3 class="fw-bold mb-1">Create Your Account</h3>
+      <p class="text-muted small">Join to post and manage your projects</p>
+    </div>
+
+    <form method="POST" action="/signUp" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Email</label>
+        <input
+          type="email"
+          name="email"
+          class="form-control form-control-lg"
+          placeholder="Enter your email"
+          required
+        />
+        <div class="invalid-feedback">Email is required.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Username</label>
+        <input
+          type="text"
+          name="username"
+          class="form-control form-control-lg"
+          placeholder="Choose a username"
+          required
+        />
+        <div class="invalid-feedback">Username is required.</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Password</label>
+        <input
+          type="password"
+          name="password"
+          class="form-control form-control-lg"
+          placeholder="Create a password"
+          required
+        />
+        <div class="invalid-feedback">Password is required.</div>
+      </div>
+
+      <button type="submit" class="btn btn-dark w-100 py-2 fs-5 rounded-3">
+        Create Account
+      </button>
+
+      <p class="text-center mt-3">
+        Already have an account?
+        <a href="/login" class="text-decoration-none text-danger fw-semibold"
+          >Login</a
+        >
+      </p>
+    </form>
+  </div>
+</div>

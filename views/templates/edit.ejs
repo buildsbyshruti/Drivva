@@ -1,0 +1,82 @@
+<%layout("/layouts/boilerplate") %>
+
+<div class="edit-page container mt-4">
+  <div class="edit-card">
+    <div class="edit-header">
+      <h3 class="edit-title">Edit Your Listing</h3>
+      <div class="edit-sub">Make changes and hit submit to update</div>
+    </div>
+
+    <form
+      method="POST"
+      action="/listings/<%= listing._id %>?_method=PUT"
+      novalidate
+      class="needs-validation edit-form"
+      enctype="multipart/form-data"
+    >
+      <div class="form-grid">
+        <div class="form-main">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input
+              name="listing[title]"
+              value="<%= listing.title %>"
+              type="text"
+              class="form-control"
+              required
+            />
+            <div class="valid-feedback">Title looks good!</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="listing[description]" class="form-control" rows="6" required><%= listing.description %></textarea>
+            <div class="invalid-feedback">Description should be valid</div>
+          </div>
+
+          <div class="row">
+            <div class="mb-3 col-md-6">
+              <label for="price" class="form-label">Price</label>
+              <input
+                name="listing[price]"
+                value="<%= listing.price %>"
+                type="number"
+                class="form-control"
+                required
+              />
+              <div class="invalid-feedback">Price should be valid</div>
+            </div>
+
+            <div class="mb-3 col-md-6">
+              <label for="category" class="form-label">Category</label>
+              <select name="listing[category]" class="form-control" required>
+                <option value="UI/UX" <%= listing.category === 'UI/UX' ? 'selected' : '' %>>UI/UX</option>
+                <option value="Frontend" <%= listing.category === 'Frontend' ? 'selected' : '' %>>Frontend</option>
+                <option value="Backend" <%= listing.category === 'Backend' ? 'selected' : '' %>>Backend</option>
+                <option value="Full Stack" <%= listing.category === 'Full Stack' ? 'selected' : '' %>>Full Stack</option>
+                <option value="AI/ML" <%= listing.category === 'AI/ML' ? 'selected' : '' %>>AI/ML</option>
+              </select>
+              <div class="invalid-feedback">Please select a valid category</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="form-side">
+          <div class="preview-block mb-3">
+            <div class="preview-label">Original image</div>
+            <img src="<%= originalListingURL %>" class="preview-img" alt="original listing" />
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Upload Image</label>
+            <input name="listing[image]" type="file" class="form-control" />
+          </div>
+
+          <div class="d-grid">
+            <button class="btn edit-btn mt-2">Submit changes</button>
+          </div>
+        </aside>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,322 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+  /* Import Poppins locally for this view */
+  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+  :root {
+    --muted: #64748b;
+    --accent: #06b6d4;
+    --title: #0f172a;
+    --surface: #ffffff;
+  }
+
+  /* Apply Poppins and tighten spacing for the listing detail card */
+  .show-card {
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+      sans-serif;
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--surface), #fbfdff);
+    box-shadow: 0 20px 60px rgba(12, 15, 20, 0.06);
+  }
+
+  /* Ensure the image and content columns stretch to same height */
+  .show-card .row.g-0 {
+    align-items: stretch;
+  }
+
+  .show-card .col-md-5 {
+    flex: 0 0 46%;
+    max-width: 46%;
+  }
+
+  .show-card .col-md-7 {
+    flex: 1 1 54%;
+    max-width: 54%;
+    display: flex;
+  }
+
+  .show-card img {
+    width: 100%;
+    height: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    display: block;
+    margin-top: 12px;
+  }
+
+  /* Card body uses column layout so bottom controls sit flush at bottom */
+  .show-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 1.6rem 1.6rem;
+  }
+
+  .card-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--title);
+    margin-bottom: 4px;
+    line-height: 1.12;
+  }
+
+  .text-muted.small {
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .card-text {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    flex: 1 1 auto; /* take remaining space so actions move to bottom */
+  }
+
+  /* Price block styling */
+  .price-block {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .price-badge {
+    background: linear-gradient(90deg, #06b6d4, #06b6a4);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    box-shadow: 0 8px 30px rgba(6, 182, 212, 0.1);
+    font-size: 1rem;
+  }
+  .price-sub {
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* Position action buttons left beneath pricing */
+  .card-body > .d-flex.gap-2 {
+    margin-top: 12px;
+    margin-bottom: 0;
+    margin-left: 0;
+    align-self: flex-start;
+    gap: 8px;
+  }
+  .card-body > .d-flex.gap-2 .btn {
+    min-width: 92px;
+    padding: 8px 10px;
+  }
+
+  /* Owner row spacing and alignment */
+  .card-title + .text-muted.small {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  /* Small responsive tweaks */
+  .reviews-list {
+    min-height: 120px;
+  }
+  .no-reviews {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    padding: 18px;
+    margin: 0;
+  }
+
+  @media (max-width: 991px) {
+    .show-card .col-md-5,
+    .show-card .col-md-7 {
+      max-width: 100%;
+      flex-basis: 100%;
+    }
+    .show-card .row.g-0 {
+      flex-direction: column;
+    }
+    .show-card img {
+      max-height: 360px;
+    }
+    .card-body {
+      padding: 1rem;
+    }
+  }
+</style>
+<div class="row mt-3">
+  <div class="col-8 offset-3">
+    <h3>Listing Details</h3>
+  </div>
+  <div class="card col-6 offset-3 show-card">
+    <div class="row g-0">
+      <div class="col-md-5">
+        <img
+          src="<%= listing.image && listing.image.url ? listing.image.url : '' %>"
+          class="img-fluid rounded-start h-100 w-100"
+          style="object-fit: cover; max-height: 420px"
+          alt="Listing_image"
+        />
+      </div>
+      <div class="col-md-7">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h3 class="card-title mb-1"><%= listing.title %></h3>
+              <div class="text-muted small">
+                By <i><%= listing.owner && listing.owner.username %></i>
+              </div>
+            </div>
+            <% if (listing.category) { %>
+            <span class="badge bg-secondary"><%= listing.category %></span>
+            <% } %>
+          </div>
+
+          <p class="card-text text-muted mb-3"><%= listing.description %></p>
+
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <% if (typeof listing.price !== 'undefined' && listing.price !==
+            null) { %>
+            <div class="price-block d-flex align-items-center gap-3">
+              <div class="price-badge">
+                ₹ <strong><%= listing.price.toLocaleString("en-IN") %></strong>
+              </div>
+              <div class="price-sub text-muted">Collaboration / License</div>
+            </div>
+            <% } else if (listing.collaboration && listing.collaboration.trim())
+            { %>
+            <div class="h6 mb-0 collaboration-label">
+              <%= listing.collaboration %>
+            </div>
+            <% } else { %>
+            <div class="text-muted"><i>Open for Collaboration</i></div>
+            <% } %>
+          </div>
+
+          <div class="d-flex gap-2">
+            <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
+            <a
+              href="/listings/<%= listing._id %>/edit"
+              class="btn btn-outline-dark btn-edit-show"
+              >Edit</a
+            >
+            <form
+              method="POST"
+              action="/listings/<%= listing._id %>?_method=DELETE"
+              class="m-0"
+            >
+              <button class="btn btn-danger">Delete</button>
+            </form>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+  <% if(currUser) { %>
+  <div class="row mt-3 mb-3 review-section">
+    <div class="col-6 offset-3 review-wrapper">
+      <h5 class="review-title">Leave a Review</h5>
+      <form
+        method="POST"
+        action="/listings/<%=listing._id%>/reviews"
+        novalidate
+        class="needs-validation review-form"
+      >
+        <div>
+          <label for="content" class="form-label review-label">Content</label>
+          <input
+            name="review[content]"
+            type="text"
+            class="form-control review-input"
+            placeholder="What did you like about this listing?"
+            required
+          />
+          <div class="invalid-feedback">Add valid feedback</div>
+        </div>
+        <label for="rating" class="form-label review-label">Rating</label>
+        <input
+          name="review[rating]"
+          type="range"
+          class="form-control review-range"
+          min="1"
+          max="5"
+          step="1"
+          required
+        />
+        <div class="mt-3">
+          <button type="submit" class="btn review-submit-btn btn-review-submit">
+            Add review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="row mt-3 mb-3">
+    <div class="col-6 offset-3 reviews-list">
+      <h5 class="review-title">Reviews</h5>
+      <% if (listing.reviews && listing.reviews.length > 0) { %> <%
+      listing.reviews.forEach(function(rev){ %>
+      <div
+        class="review-card d-flex align-items-start gap-3 p-3 border rounded mb-3"
+      >
+        <div class="review-avatar flex-shrink-0" aria-hidden="true">
+          <div
+            class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 48px; height: 48px"
+          >
+            <span class="avatar-initial">
+              <%= (rev.author && rev.author.username) ?
+              rev.author.username.charAt(0).toUpperCase() : 'U' %>
+            </span>
+          </div>
+        </div>
+        <div class="review-body flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <div class="review-author fw-semibold">
+                <%= rev.author && rev.author.username ? rev.author.username :
+                'User' %>
+              </div>
+              <div class="text-muted small">
+                <%= new Date(rev.createdAt).toLocaleString() %>
+              </div>
+            </div>
+            <div class="review-stars">
+              <% for (let i = 1; i <= 5; i++) { %>
+              <span class="star <%= i <= rev.rating ? 'filled' : '' %>">★</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="review-content"><%= rev.content %></div>
+        </div>
+        <% const isReviewAuthor = rev.author && String(rev.author._id ||
+        rev.author) === String(currUser && currUser._id); const isListingOwner =
+        currUser && listing.owner && String(currUser._id) ===
+        String(listing.owner._id); %> <% if (currUser && (isReviewAuthor ||
+        isListingOwner)) { %>
+        <div class="flex-shrink-0">
+          <form
+            method="POST"
+            action="/listings/<%= listing._id %>/reviews/<%= rev._id %>?_method=DELETE"
+            class="m-0"
+          >
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Delete
+            </button>
+          </form>
+        </div>
+        <% } %>
+      </div>
+      <% }) %> <% } else { %>
+      <div class="no-reviews">No reviews yet. Be the first to review!</div>
+      <% } %>
+    </div>
+  </div>
+</div>
