@@ -102,6 +102,9 @@ app.use((req, res, next) => {
   res.locals.currUser = req.user;
   next();
 });
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 app.use("/listings", listing_route);
 app.use("/listings/:id/reviews", review_route);
@@ -115,14 +118,13 @@ app.use((req, res, next) => {
   next(new ExpressError(404, "Page not found"));
 });
 
-// Error-handling middleware
 app.use((err, req, res, next) => {
-  const { status = 500, message = "Something went wrong" } = err;
-  res
-    .status(status)
-    .render("templates/error.ejs", { statusCode: status, message });
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Something went wrong";
+  res.status(statusCode).render("templates/error.ejs", { statusCode, message });
 });
+const PORT = process.env.PORT || 8080;
 
-app.listen(8080, (req, res) => {
-  console.log("app is listening");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
