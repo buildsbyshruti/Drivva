@@ -8,7 +8,9 @@ module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.registeredUrl = req.originalUrl;
     req.flash("error", "You need to login first");
-    return res.redirect("/login");
+    return req.session.save(() => {
+      res.redirect("/login");
+    });
   }
   next();
 };
@@ -64,7 +66,8 @@ module.exports.isReviewOwner = async (req, res, next) => {
   // Allow deletion if the current user is the review author or the listing owner
   const listing = await Listing.findById(id);
   const isReviewAuthor = String(review.author) === String(req.user._id);
-  const isListingOwner = listing && listing.owner && String(listing.owner) === String(req.user._id);
+  const isListingOwner =
+    listing && listing.owner && String(listing.owner) === String(req.user._id);
   if (!isReviewAuthor && !isListingOwner) {
     req.flash("error", "You do not have permission to do that");
     return res.redirect(`/listings/${id}`);

@@ -1,4 +1,3 @@
-// models/listing.js
 const mongoose = require("mongoose");
 const review = require("./review.js");
 const User = require("./user.js");
@@ -35,8 +34,17 @@ const listingschema = new mongoose.Schema({
   category: {
     type: String,
     enum: ["UI/UX", "Frontend", "Backend", "Full Stack", "AI/ML"],
-    // required: true,
   },
+  likes: {
+    type: Number,
+    default: 0,
+  },
+  likedBy: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const Listing = mongoose.model("Listing", listingschema);

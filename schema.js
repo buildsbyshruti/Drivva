@@ -1,14 +1,9 @@
 const Joi = require("joi");
-
 module.exports.listingSchema = Joi.object({
   listing: Joi.object({
     title: Joi.string().required(),
     description: Joi.string().required(),
     price: Joi.number().min(0).required(),
-    // image: Joi.object({
-    //   filename: Joi.string(),
-    //   url: Joi.string(),
-    // }),
     category: Joi.string()
       .valid("UI/UX", "Frontend", "Backend", "Full Stack", "AI/ML")
       .required(),

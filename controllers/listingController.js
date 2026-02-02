@@ -23,7 +23,7 @@ module.exports.index = async (req, res) => {
   } else if (category && category !== "All") {
     req.flash(
       "error",
-      "The selected category does not exist. Please choose a valid service."
+      "The selected category does not exist. Please choose a valid service.",
     );
     return res.redirect("/listings");
   } else {
@@ -104,4 +104,31 @@ module.exports.deleteListing = async (req, res) => {
   let deletedlisting = await Listing.findByIdAndDelete(id);
   req.flash("success", "Listing deleted Successfully");
   res.redirect("/listings");
+};
+
+module.exports.toggleLike = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id;
+
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    return res.status(404).json({ error: "Listing not found" });
+  }
+
+  const alreadyLiked = listing.likedBy.includes(userId);
+
+  if (alreadyLiked) {
+    listing.likedBy.pull(userId);
+    listing.likes = Math.max(0, listing.likes - 1);
+  } else {
+    listing.likedBy.push(userId);
+    listing.likes = listing.likes + 1;
+  }
+
+  await listing.save();
+
+  res.json({
+    liked: !alreadyLiked,
+    likes: listing.likes,
+  });
 };

@@ -5,9 +5,7 @@
   rel="stylesheet"
 />
 
-<!-- ============================= -->
-<!-- HERO SECTION (VIDEO ONLY) -->
-<!-- ============================= -->
+
 <section class="project-hero video-hero">
   <video class="hero-video" autoplay muted loop playsinline>
     <source src="/videos/tech-bg.mp4" type="video/mp4" />
@@ -46,9 +44,7 @@
   </a>
 </section>
 
-<!-- ============================= -->
-<!-- SERVICES STRIP -->
-<!-- ============================= -->
+
 <section class="service-strip">
   <div class="page-container">
     <div class="service-cards">
@@ -80,9 +76,7 @@
   </div>
 </section>
 
-<!-- ============================= -->
-<!-- ALL / FILTERED PROJECTS -->
-<!-- ============================= -->
+
 <section id="projects" class="project-intro">
   <h2>
     <% if (selectedCategory === "All") { %> All Projects <% } else { %> <%=
@@ -107,11 +101,12 @@
           </div>
         </div>
         <button
-          class="like-btn"
+          class="like-btn<%= (currUser && listing.likedBy && listing.likedBy.some(u => u.equals(currUser._id))) ? ' liked' : '' %>"
+          data-id="<%= listing._id %>"
           data-count="<%= listing.likes || 0 %>"
           aria-label="Like"
         >
-          <i class="fa-regular fa-heart"></i>
+          <i class="fa-<%= (currUser && listing.likedBy && listing.likedBy.some(u => u.equals(currUser._id))) ? 'solid' : 'regular' %> fa-heart"></i>
           <span class="likes-num"><%= listing.likes || 0 %></span>
         </button>
       </div>
@@ -119,12 +114,6 @@
       <div class="listing-content">
         <div class="listing-meta align-items-center">
           <h3 class="listing-title"><%= listing.title %></h3>
-          <div class="listing-rating-inline">
-            <i class="fa-solid fa-star"></i>
-            <span class="rating-num-inline"
-              ><%= listing.rating || '4.9' %></span
-            >
-          </div>
         </div>
       </div>
     </div>

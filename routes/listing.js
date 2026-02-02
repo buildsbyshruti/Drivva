@@ -13,12 +13,15 @@ router
     isLoggedIn,
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(listingController.postNewListing)
+    wrapAsync(listingController.postNewListing),
   );
 
 router.get("/new", isLoggedIn, wrapAsync(listingController.newListing));
 
 router.get("/:id/edit", isOwner, wrapAsync(listingController.editListing));
+
+router.post("/:id/like", isLoggedIn, wrapAsync(listingController.toggleLike));
+
 router
   .route("/:id")
   .get(wrapAsync(listingController.showListing))
@@ -27,7 +30,7 @@ router
     isOwner,
     upload.single("listing[image]"),
     validateListing,
-    wrapAsync(listingController.updateListing)
+    wrapAsync(listingController.updateListing),
   )
   .delete(isOwner, wrapAsync(listingController.deleteListing));
 

@@ -61,7 +61,7 @@ if (MongoStore && typeof MongoStore.create === "function") {
   });
 } else {
   throw new Error(
-    "Unsupported connect-mongo version: cannot create session store"
+    "Unsupported connect-mongo version: cannot create session store",
   );
 }
 const sessionOption = {
@@ -87,6 +87,16 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+  const isDirectListingsHit =
+    req.method === "GET" && req.path === "/listings" && !req.get("Referer");
+  if (isDirectListingsHit) {
+    req.flash("error");
+    req.flash("success");
+  }
+  next();
+});
+
+app.use((req, res, next) => {
   res.locals.successMsg = req.flash("success");
   res.locals.errorMsg = req.flash("error");
   res.locals.currUser = req.user;
@@ -96,6 +106,10 @@ app.use((req, res, next) => {
 app.use("/listings", listing_route);
 app.use("/listings/:id/reviews", review_route);
 app.use("/", user_route);
+
+app.get("/privacy", (req, res) => {
+  res.render("templates/privacy.ejs");
+});
 
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page not found"));
