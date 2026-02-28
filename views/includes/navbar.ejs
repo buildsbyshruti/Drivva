@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-md navbar-light airbnb-navbar sticky-top">
+  <div whole-header style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+    <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
+      <a class="navbar-brand" href="/listings">
+        <span class="brand-icon"><i class="fa-solid fa-cubes-stacked"></i></span>
+        <span class="brand-text">DRIVVA</span>
+      </a>
+      <a class="nav-link btn-home" href="/listings" aria-label="Home"><i class="fa-solid fa-house"></i></a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="flex: 1;">
+      <div class="header-center mx-auto"></div>
+      <div class="header-right navbar-nav nav-auth">
+        <div class="header-add-listing navbar-nav" style="padding-right: 6px; display: flex; align-items: center;">
+          <a class="nav-link btn-add-listing" href="/listings/new">
+            <i class="fa-solid fa-circle-plus"></i> Add Listing
+          </a>
+        </div>
+        <% if (!currUser) { %>
+        <a class="nav-link btn-login" href="/login">Sign in</a>
+        <a class="nav-link btn-signup" href="/SignUp">Sign up</a>
+        <% } else { %>
+        <a class="nav-link btn-logout" href="/logOut">Log Out</a>
+        <% } %>
+      </div>
+    </div>
+
+    <button
+      class="navbar-toggler d-md-none"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>

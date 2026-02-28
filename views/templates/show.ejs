@@ -1,0 +1,225 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="show-page-wrapper">
+
+  <!-- Listing Detail -->
+  <div class="show-card-outer">
+    <p class="show-breadcrumb"><a href="/listings">← Back to listings</a></p>
+    <div class="card show-card">
+      <div class="row g-0">
+        <div class="col-md-5">
+          <img
+            src="<%= listing.image && listing.image.url ? listing.image.url : '' %>"
+            class="img-fluid rounded-start"
+            alt="Listing_image"
+          />
+        </div>
+        <div class="col-md-7">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2" style="gap: 10px; flex-wrap: wrap;">
+              <div>
+                <h3 class="card-title"><%= listing.title %></h3>
+                <div class="owner-label">
+                  By <span class="owner-name"><%= listing.owner && listing.owner.username %></span>
+                </div>
+              </div>
+              <% if (listing.category) { %>
+              <span class="category-badge"><%= listing.category %></span>
+              <% } %>
+            </div>
+
+            <p class="card-text"><%= listing.description %></p>
+
+            <div class="d-flex align-items-center gap-3 mb-3" style="flex-wrap: wrap;">
+              <% if (typeof listing.price !== 'undefined' && listing.price !== null) { %>
+              <div class="price-block d-flex align-items-center" style="gap: 12px; flex-wrap: wrap;">
+                <div class="price-badge">
+                  ₹ <strong><%= listing.price.toLocaleString("en-IN") %></strong>
+                </div>
+                <div class="price-sub text-muted">Collaboration / License</div>
+              </div>
+              <% } else if (listing.collaboration && listing.collaboration.trim()) { %>
+              <div class="collaboration-label">
+                <%= listing.collaboration %>
+              </div>
+              <% } else { %>
+              <div class="open-collab">Open for Collaboration</div>
+              <% } %>
+            </div>
+
+            <div class="d-flex gap-2" style="flex-wrap: wrap;">
+              <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
+              <a
+                href="/listings/<%= listing._id %>/edit"
+                class="btn btn-outline-dark btn-edit-show"
+                >Edit</a
+              >
+              <form
+                method="POST"
+                action="/listings/<%= listing._id %>?_method=DELETE"
+                class="m-0"
+              >
+                <button class="btn btn-danger">Delete</button>
+              </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Form -->
+  <% if(currUser) { %>
+  <div class="show-side-section review-section">
+    <div class="review-wrapper">
+      <h5 class="review-title">Leave a Review</h5>
+      <form
+        method="POST"
+        action="/listings/<%=listing._id%>/reviews"
+        novalidate
+        class="needs-validation review-form"
+      >
+        <div>
+          <label for="content" class="form-label review-label">Content</label>
+          <input
+            name="review[content]"
+            type="text"
+            class="form-control review-input"
+            placeholder="What did you like about this listing?"
+            required
+          />
+          <div class="invalid-feedback">Add valid feedback</div>
+        </div>
+        <label for="rating-input" class="form-label review-label">Rating</label>
+        <div class="star-rating" role="radiogroup" aria-label="Rating">
+          <button type="button" class="star-btn" data-value="1" aria-label="1 star" aria-checked="false">★</button>
+          <button type="button" class="star-btn" data-value="2" aria-label="2 stars" aria-checked="false">★</button>
+          <button type="button" class="star-btn" data-value="3" aria-label="3 stars" aria-checked="false">★</button>
+          <button type="button" class="star-btn" data-value="4" aria-label="4 stars" aria-checked="false">★</button>
+          <button type="button" class="star-btn" data-value="5" aria-label="5 stars" aria-checked="true">★</button>
+        </div>
+        <input
+          id="rating-input"
+          name="review[rating]"
+          type="hidden"
+          value="5"
+          required
+        />
+        <div class="mt-3">
+          <button type="submit" class="btn review-submit-btn btn-review-submit">
+            Add review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- Reviews List -->
+  <div class="show-side-section">
+    <div class="reviews-list">
+      <h5 class="review-title">Reviews</h5>
+      <% if (listing.reviews && listing.reviews.length > 0) { %> <%
+      listing.reviews.forEach(function(rev){ %>
+      <div
+        class="review-card d-flex align-items-start gap-3 p-3 border rounded mb-3"
+      >
+        <div class="review-avatar flex-shrink-0" aria-hidden="true">
+          <div
+            class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 48px; height: 48px"
+          >
+            <span class="avatar-initial">
+              <%= (rev.author && rev.author.username) ?
+              rev.author.username.charAt(0).toUpperCase() : 'U' %>
+            </span>
+          </div>
+        </div>
+        <div class="review-body flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start mb-2" style="flex-wrap: wrap; gap: 6px;">
+            <div>
+              <div class="review-author fw-semibold">
+                <%= rev.author && rev.author.username ? rev.author.username :
+                'User' %>
+              </div>
+              <div class="text-muted small">
+                <%= new Date(rev.createdAt).toLocaleString() %>
+              </div>
+            </div>
+            <div class="review-stars">
+              <% for (let i = 1; i <= 5; i++) { %>
+              <span class="star <%= i <= rev.rating ? 'filled' : '' %>">★</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="review-content"><%= rev.content %></div>
+        </div>
+        <% const isReviewAuthor = rev.author && String(rev.author._id ||
+        rev.author) === String(currUser && currUser._id); const isListingOwner =
+        currUser && listing.owner && String(currUser._id) ===
+        String(listing.owner._id); %> <% if (currUser && (isReviewAuthor ||
+        isListingOwner)) { %>
+        <div class="flex-shrink-0">
+          <form
+            method="POST"
+            action="/listings/<%= listing._id %>/reviews/<%= rev._id %>?_method=DELETE"
+            class="m-0"
+          >
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Delete
+            </button>
+          </form>
+        </div>
+        <% } %>
+      </div>
+      <% }) %> <% } else { %>
+      <div class="no-reviews">No reviews yet. Be the first to review!</div>
+      <% } %>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .show-page-wrapper {
+    max-width: 860px;
+    margin: 1.5rem auto 3rem;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .show-card-outer {
+    width: 100%;
+  }
+
+  .show-breadcrumb {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .show-breadcrumb a {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .show-breadcrumb a:hover {
+    color: #06b6d4;
+  }
+
+  .show-side-section {
+    width: 100%;
+  }
+
+  @media (max-width: 576px) {
+    .show-page-wrapper {
+      padding: 0 0.5rem;
+      margin-top: 1rem;
+      gap: 1rem;
+    }
+  }
+</style>

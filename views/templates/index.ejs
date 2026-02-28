@@ -1,0 +1,122 @@
+<% layout("layouts/boilerplate") %>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+
+
+<section class="project-hero video-hero">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="/videos/tech-bg.mp4" type="video/mp4" />
+  </video>
+
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <h1>What do you want to see?</h1>
+    <p>Explore real-world developer & design projects</p>
+
+    <form class="hero-search" action="/listings#projects" method="GET">
+      <input
+        type="text"
+        name="category"
+        placeholder="What service are you looking for?"
+        aria-label="Search services"
+      />
+      <button type="submit">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </form>
+
+    <div class="category-pills">
+      <a href="/listings#projects">All</a>
+      <a href="/listings?category=UI/UX#projects">UI/UX</a>
+      <a href="/listings?category=Frontend#projects">Frontend</a>
+      <a href="/listings?category=Backend#projects">Backend</a>
+      <a href="/listings?category=Full Stack#projects">Full Stack</a>
+      <a href="/listings?category=AI/ML#projects">AI / ML</a>
+    </div>
+  </div>
+
+  <a href="#projects" class="scroll-indicator">
+    <span></span>
+  </a>
+</section>
+
+
+<section class="service-strip">
+  <div class="page-container">
+    <div class="service-cards">
+      <a href="/listings?category=Frontend" class="service-card">
+        <i class="fa-solid fa-code icon"></i>
+        <h3>Programming & Tech</h3>
+      </a>
+
+      <a href="/listings?category=UI/UX" class="service-card">
+        <i class="fa-solid fa-pen-ruler icon"></i>
+        <h3>Graphics & Design</h3>
+      </a>
+
+      <a href="/listings?category=Backend" class="service-card">
+        <i class="fa-solid fa-database icon"></i>
+        <h3>Backend Systems</h3>
+      </a>
+
+      <a href="/listings?category=Full Stack" class="service-card">
+        <i class="fa-solid fa-layer-group icon"></i>
+        <h3>Full Stack Apps</h3>
+      </a>
+
+      <a href="/listings?category=AI/ML" class="service-card">
+        <i class="fa-solid fa-robot icon"></i>
+        <h3>AI Services</h3>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<section id="projects" class="project-intro">
+  <h2>
+    <% if (selectedCategory === "All") { %> All Projects <% } else { %> <%=
+    selectedCategory %> Projects <% } %>
+  </h2>
+  <p>Browse projects built across different domains</p>
+</section>
+
+<div class="listings-grid">
+  <% for (let listing of Alllistings) { %>
+  <a href="/listings/<%= listing._id %>" class="listing-link">
+    <div class="listing-card">
+      <div class="listing-image-wrapper">
+        <img src="<%= listing.image.url %>" alt="<%= listing.title %>" />
+
+        <span class="badge-favourite">Featured</span>
+
+        <div class="overlay-meta" aria-hidden="true">
+          <div class="overlay-rating">
+            <i class="fa-solid fa-star"></i>
+            <span class="rating-num"><%= listing.rating || '4.9' %></span>
+          </div>
+        </div>
+        <button
+          class="like-btn<%= (currUser && listing.likedBy && listing.likedBy.some(u => u.equals(currUser._id))) ? ' liked' : '' %>"
+          data-id="<%= listing._id %>"
+          data-count="<%= listing.likes || 0 %>"
+          aria-label="Like"
+        >
+          <i class="fa-<%= (currUser && listing.likedBy && listing.likedBy.some(u => u.equals(currUser._id))) ? 'solid' : 'regular' %> fa-heart"></i>
+          <span class="likes-num"><%= listing.likes || 0 %></span>
+        </button>
+      </div>
+
+      <div class="listing-content">
+        <div class="listing-meta align-items-center">
+          <h3 class="listing-title"><%= listing.title %></h3>
+        </div>
+      </div>
+    </div>
+  </a>
+  <% } %>
+</div>

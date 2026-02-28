@@ -1,0 +1,43 @@
+<div class="flash-container" aria-live="polite" aria-atomic="true">
+  <% if (successMsg && successMsg.length) { %> <%
+  successMsg.forEach(function(msg){ %>
+  <div class="alert alert-success flash-toast" role="alert">
+    <div class="flash-body"><%= msg %></div>
+    <button type="button" class="flash-close" aria-label="Close">
+      &times;
+    </button>
+  </div>
+  <% }) %> <% } %> <% if (errorMsg && errorMsg.length) { %> <%
+  errorMsg.forEach(function(msg){ %>
+  <div class="alert alert-danger flash-toast" role="alert">
+    <div class="flash-body"><%= msg %></div>
+    <button type="button" class="flash-close" aria-label="Close">
+      &times;
+    </button>
+  </div>
+  <% }) %> <% } %>
+</div>
+
+<script>
+  (function () {
+    const container = document.querySelector(".flash-container");
+    if (!container) return;
+
+    container.addEventListener("click", function (e) {
+      const btn = e.target.closest(".flash-close");
+      if (!btn) return;
+      const toast = btn.closest(".flash-toast");
+      if (toast) toast.classList.add("flash-hide");
+    });
+
+    const toasts = Array.from(container.querySelectorAll(".flash-toast"));
+    toasts.forEach(function (t) {
+      setTimeout(function () {
+        t.classList.add("flash-hide");
+        setTimeout(function () {
+          if (t.parentNode) t.parentNode.removeChild(t);
+        }, 420);
+      }, 5000);
+    });
+  })();
+</script>

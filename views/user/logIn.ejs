@@ -1,0 +1,108 @@
+<% layout('layouts/boilerplate') %>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  body,
+  .container,
+  .card,
+  .form-label,
+  .form-control,
+  .btn {
+    font-family: "Poppins", Arial, sans-serif !important;
+  }
+  .card {
+    border: none;
+    background: #fff;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    border-radius: 2rem;
+  }
+  .form-label {
+    color: #222;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .form-control {
+    border-radius: 0.75rem;
+    border: 1px solid #e0e0e0;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f9f9f9;
+    transition: border-color 0.2s;
+  }
+  .form-control:focus {
+    border-color: #222;
+    box-shadow: 0 0 0 2px #e3e3e3;
+    background: #fff;
+  }
+  .btn-dark {
+    background: linear-gradient(90deg, #232526 0%, #414345 100%);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition:
+      background 0.2s,
+      box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(31, 38, 135, 0.08);
+  }
+  .btn-dark:hover,
+  .btn-dark:focus {
+    background: linear-gradient(90deg, #232526 0%, #2c3e50 100%);
+    box-shadow: 0 4px 16px rgba(31, 38, 135, 0.12);
+  }
+  .fw-bold {
+    font-weight: 700 !important;
+  }
+  .fw-semibold {
+    font-weight: 600 !important;
+  }
+  .text-muted {
+    color: #7b7b7b !important;
+  }
+</style>
+
+<div
+  class="container d-flex justify-content-center align-items-center"
+  style="min-height: 80vh"
+>
+  <div
+    class="card shadow-lg p-4 rounded-4"
+    style="max-width: 430px; width: 100%"
+  >
+    <div class="text-center mb-4">
+      <h3 class="fw-bold mb-1" style="letter-spacing: 0.01em">Welcome Back</h3>
+      <p class="text-muted small" style="font-size: 1.05rem">
+        Login to manage your listings
+      </p>
+    </div>
+    <form method="POST" action="/login" class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Username</label>
+        <input
+          type="text"
+          name="username"
+          class="form-control form-control-lg"
+          placeholder="Enter your username"
+          required
+        />
+        <div class="invalid-feedback">Username is incorrect.</div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-semibold">Password</label>
+        <input
+          type="password"
+          name="password"
+          class="form-control form-control-lg"
+          placeholder="Enter your password"
+          required
+        />
+        <div class="invalid-feedback">Password is required.</div>
+      </div>
+      <button type="submit" class="btn btn-dark w-100 py-2 fs-5 rounded-3">
+        Sign In
+      </button>
+    </form>
+  </div>
+</div>
